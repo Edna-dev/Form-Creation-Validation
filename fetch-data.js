@@ -1,44 +1,32 @@
-function add(num1, num2) {
-    return num1 + num2;
-}
+async function fetchUserData() {
+    const apiUrl = 'https://jsonplaceholder.typicode.com/users';
+    const dataContainer = document.getElementById('api-data');
 
-function subtract(num1, num2) {
-    return num1 - num2;
-}
+    try {
+        const response = await fetch(apiUrl);
+        const users = await response.json();
 
-function multiply(num1, num2) {
-    return num1 * num2;
-}
+        // Clear the loading message
+        dataContainer.innerHTML = '';
 
-function divide(num1, num2) {
-    if (num2 === 0) {
-        return 'Error: Division by zero';
+        // Create a <ul> element
+        const userList = document.createElement('ul');
+
+        // Add each user name to the list
+        users.forEach(user => {
+            const listItem = document.createElement('li');
+            listItem.textContent = user.name;
+            userList.appendChild(listItem);
+        });
+
+        // Append the list to the container
+        dataContainer.appendChild(userList);
+    } catch (error) {
+        dataContainer.innerHTML = 'Failed to load user data.';
+        console.error('Fetch error:', error);
     }
-    return num1 / num2;
 }
 
-function getInputValues() {
-    const number1 = parseFloat(document.getElementById('number1').value) || 0;
-    const number2 = parseFloat(document.getElementById('number2').value) || 0;
-    return [number1, number2];
-}
+// Run this function when the page finishes loading
+document.addEventListener('DOMContentLoaded', fetchUserData);
 
-document.getElementById('add').addEventListener('click', function () {
-    const [n1, n2] = getInputValues();
-    document.getElementById('calculation-result').textContent = add(n1, n2);
-});
-
-document.getElementById('subtract').addEventListener('click', function () {
-    const [n1, n2] = getInputValues();
-    document.getElementById('calculation-result').textContent = subtract(n1, n2);
-});
-
-document.getElementById('multiply').addEventListener('click', function () {
-    const [n1, n2] = getInputValues();
-    document.getElementById('calculation-result').textContent = multiply(n1, n2);
-});
-
-document.getElementById('divide').addEventListener('click', function () {
-    const [n1, n2] = getInputValues();
-    document.getElementById('calculation-result').textContent = divide(n1, n2);
-});
